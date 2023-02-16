@@ -4,6 +4,11 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+// swagger
+const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
+
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -19,8 +24,32 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// swagger
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+const swaggerOptions = {
+  swaggerDefinition: {
+    info: {
+      title: "API REST de exemplo de uso do Swagger em Node.js",
+      description:
+        "Mostra como configurar uma aplicação Node.js com expressjs, swagger-ui-express para geração da Swagger UI e swagger-jsdoc para especificar os endpoints implementados com expressjs por meio de comentários JSDoc.",
+    },
+    servers: [
+      {
+        url: "http://localhost:3000",
+        description: "Development server",
+      },
+    ],
+  },
+  apis: ["./routes/*.js"],
+};
+
+app.use(
+  "/api-docs/",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerJsDoc(swaggerOptions))
+);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
