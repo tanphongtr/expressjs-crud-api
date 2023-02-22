@@ -18,8 +18,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Define route for file upload
-router.post('/', upload.single('file'), function(req, res) {
-  res.send('File uploaded successfully');
+router.post('/', upload.array('files', 3), function(req, res) {
+  res.json({ message: 'Files uploaded successfully' });
 });
 
 module.exports = router;
